@@ -63,9 +63,12 @@
 
 <script>
 const axios = require("axios");
-
+import {
+    msalMixin
+} from "vue-msal";
 export default {
     name: "question",
+    mixins: [msalMixin],
     data: () => ({
         showans: false,
         ques: [],
@@ -100,9 +103,16 @@ export default {
             let xselect = item.selected.sort().toString();
             item.result = xans == xselect;
         },
+        async checkauthen() {
+            if (this.$msal.isAuthenticated()) {
+                this.getQuest();
+            } else {
+                this.$msal.signIn();
+            }
+        },
     },
     mounted() {
-        this.getQuest();
+        this.checkauthen();
     },
 };
 </script>
